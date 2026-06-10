@@ -1,11 +1,478 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
 <Layout>
-	<Welcome />
+	<main class="max-w-6xl mx-auto px-4 py-12 w-full">
+		<header class="mb-10 text-center">
+			<h1 class="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4 pb-3 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-emerald-600 dark:from-blue-400 dark:to-emerald-400">
+				Word & Character Counter - Accurate Writing Analysis
+			</h1>
+			<p class="text-slate-600 dark:text-slate-400 text-lg max-w-2xl mx-auto">
+				Analyze your text instantly. Get precise metrics for words, characters, readability, and SEO keyword density as you type.
+			</p>
+		</header>
+
+		<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+			<!-- Text Input Area -->
+			<section class="lg:col-span-8 space-y-4">
+				<div class="flex justify-between items-center mb-2">
+					<label for="text-input" class="text-sm font-medium text-slate-600 dark:text-slate-300">Enter your text below:</label>
+					<div class="flex gap-2">
+						<button 
+							id="copy-btn"
+							class="px-3 py-1.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition-colors flex items-center gap-1 shadow-sm"
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+							Copy Text
+						</button>
+						<button 
+							id="clear-btn"
+							class="px-3 py-1.5 text-xs font-semibold rounded bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-500/20 transition-colors flex items-center gap-1 shadow-sm"
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+							Clear
+						</button>
+					</div>
+				</div>
+				<textarea
+					id="text-input"
+					class="w-full h-96 p-6 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 shadow-inner resize-none transition-all outline-none"
+					placeholder="Start typing or paste your content here..."
+				></textarea>
+			</section>
+
+			<!-- Metrics Sidebar -->
+			<aside class="lg:col-span-4 space-y-6">
+				<!-- Primary Metrics Grid -->
+				<div class="grid grid-cols-2 gap-4">
+					<div class="bg-slate-50 dark:bg-slate-800/40 p-4 rounded-lg border border-slate-200 dark:border-slate-700/50">
+						<span class="block text-xs text-slate-400 dark:text-slate-500 uppercase font-bold tracking-wider mb-1">Words</span>
+						<span id="word-count" class="text-3xl font-bold text-blue-600 dark:text-blue-400">0</span>
+					</div>
+					<div class="bg-slate-50 dark:bg-slate-800/40 p-4 rounded-lg border border-slate-200 dark:border-slate-700/50">
+						<span class="block text-xs text-slate-400 dark:text-slate-500 uppercase font-bold tracking-wider mb-1">Characters</span>
+						<span id="char-count" class="text-3xl font-bold text-emerald-600 dark:text-emerald-400">0</span>
+					</div>
+					<div class="bg-slate-50 dark:bg-slate-800/40 p-4 rounded-lg border border-slate-200 dark:border-slate-700/50">
+						<span class="block text-xs text-slate-400 dark:text-slate-500 uppercase font-bold tracking-wider mb-1">Sentences</span>
+						<span id="sentence-count" class="text-2xl font-bold text-slate-700 dark:text-slate-200">0</span>
+					</div>
+					<div class="bg-slate-50 dark:bg-slate-800/40 p-4 rounded-lg border border-slate-200 dark:border-slate-700/50">
+						<span class="block text-xs text-slate-400 dark:text-slate-500 uppercase font-bold tracking-wider mb-1">Paragraphs</span>
+						<span id="paragraph-count" class="text-2xl font-bold text-slate-700 dark:text-slate-200">0</span>
+					</div>
+					<div class="bg-slate-50 dark:bg-slate-800/40 p-4 rounded-lg border border-slate-200 dark:border-slate-700/50 col-span-2">
+						<span class="block text-xs text-slate-400 dark:text-slate-500 uppercase font-bold tracking-wider mb-1">Unique Characters</span>
+						<span id="unique-char-count" class="text-2xl font-bold text-purple-600 dark:text-purple-400">0</span>
+					</div>
+				</div>
+
+				<!-- Detailed Metrics -->
+				<div class="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-4 shadow-sm">
+					<div class="flex justify-between items-center text-sm">
+						<span class="text-slate-500 dark:text-slate-400">Chars (no spaces)</span>
+						<span id="char-no-spaces" class="font-mono text-slate-700 dark:text-slate-200">0</span>
+					</div>
+					<div class="flex justify-between items-center text-sm border-t border-slate-200 dark:border-slate-700/50 pt-4">
+						<div class="flex items-center gap-2">
+							<svg xmlns="http://www.w3.org/2000/svg" class="text-blue-500 dark:text-blue-400" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+							<span class="text-slate-500 dark:text-slate-400">Reading Time</span>
+						</div>
+						<span id="reading-time" class="text-slate-700 dark:text-slate-200 font-medium">0s</span>
+					</div>
+					<div class="flex justify-between items-center text-sm border-t border-slate-200 dark:border-slate-700/50 pt-4">
+						<div class="flex items-center gap-2">
+							<svg xmlns="http://www.w3.org/2000/svg" class="text-emerald-500 dark:text-emerald-400" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18.5a6.66 6.66 0 0 1-3.5-1.03 6.67 6.67 0 0 1-3.5 1.03"/><path d="M19 18.5a6.66 6.66 0 0 0-3.5-1.03 6.67 6.67 0 0 0-3.5 1.03"/><path d="M12 21V12"/><path d="m16 9-4 4-4-4"/></svg>
+							<span class="text-slate-500 dark:text-slate-400">Speaking Time</span>
+						</div>
+						<span id="speaking-time" class="text-slate-700 dark:text-slate-200 font-medium">0s</span>
+					</div>
+				</div>
+
+				<!-- Keyword Density Panel -->
+				<div class="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+					<h3 class="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest mb-4">Top Keywords</h3>
+					<div id="keyword-list" class="space-y-3">
+						<p class="text-xs text-slate-400 dark:text-slate-500 italic">Enter text to see keyword analysis...</p>
+					</div>
+				</div>
+
+				<!-- Character Frequency Panel -->
+				<div class="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+					<h3 class="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest mb-4">Character Frequency</h3>
+					<div id="char-freq-list" class="grid grid-cols-4 gap-2">
+						<p class="text-xs text-slate-400 dark:text-slate-500 italic col-span-full">Enter text to see frequency...</p>
+					</div>
+				</div>
+			</aside>
+		</div>
+
+		<!-- Quick Reference Section -->
+		<section id="guidelines" class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+			<div class="bg-slate-50 dark:bg-slate-800/20 p-6 rounded-xl border border-slate-200 dark:border-slate-700/30 shadow-sm">
+				<div class="flex items-center gap-2 mb-3">
+					<svg xmlns="http://www.w3.org/2000/svg" class="text-blue-500 dark:text-blue-400" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+					<h3 class="text-slate-700 dark:text-slate-200 font-bold uppercase text-xs tracking-widest">Social Media</h3>
+				</div>
+				<ul class="text-sm text-slate-500 dark:text-slate-400 space-y-2">
+					<li class="flex justify-between border-b border-slate-200 dark:border-slate-700/30 pb-1"><span>Twitter/X</span> <span class="text-slate-700 dark:text-slate-200 font-mono">280 Chars</span></li>
+					<li class="flex justify-between border-b border-slate-200 dark:border-slate-700/30 pb-1"><span>LinkedIn Post</span> <span class="text-slate-700 dark:text-slate-200 font-mono">3,000 Chars</span></li>
+					<li class="flex justify-between"><span>Instagram Caption</span> <span class="text-slate-700 dark:text-slate-200 font-mono">2,200 Chars</span></li>
+				</ul>
+			</div>
+			<div class="bg-slate-50 dark:bg-slate-800/20 p-6 rounded-xl border border-slate-200 dark:border-slate-700/30 shadow-sm">
+				<div class="flex items-center gap-2 mb-3">
+					<svg xmlns="http://www.w3.org/2000/svg" class="text-emerald-500 dark:text-emerald-400" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5z"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h6"/><path d="M8 11h8"/><path d="M8 15h6"/></svg>
+					<h3 class="text-slate-700 dark:text-slate-200 font-bold uppercase text-xs tracking-widest">Content Writing</h3>
+				</div>
+				<ul class="text-sm text-slate-500 dark:text-slate-400 space-y-2">
+					<li class="flex justify-between border-b border-slate-200 dark:border-slate-700/30 pb-1"><span>Short Blog</span> <span class="text-slate-700 dark:text-slate-200 font-mono">600 - 1k Words</span></li>
+					<li class="flex justify-between border-b border-slate-200 dark:border-slate-700/30 pb-1"><span>Long Form</span> <span class="text-slate-700 dark:text-slate-200 font-mono">1.5k - 2.5k Words</span></li>
+					<li class="flex justify-between"><span>SEO Title</span> <span class="text-slate-700 dark:text-slate-200 font-mono">50 - 60 Chars</span></li>
+				</ul>
+			</div>
+			<div class="bg-slate-50 dark:bg-slate-800/20 p-6 rounded-xl border border-slate-200 dark:border-slate-700/30 shadow-sm">
+				<div class="flex items-center gap-2 mb-3">
+					<svg xmlns="http://www.w3.org/2000/svg" class="text-purple-500 dark:text-purple-400" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+					<h3 class="text-slate-700 dark:text-slate-200 font-bold uppercase text-xs tracking-widest">Academic</h3>
+				</div>
+				<ul class="text-sm text-slate-500 dark:text-slate-400 space-y-2">
+					<li class="flex justify-between border-b border-slate-200 dark:border-slate-700/30 pb-1"><span>Standard Essay</span> <span class="text-slate-700 dark:text-slate-200 font-mono">500 - 2k Words</span></li>
+					<li class="flex justify-between border-b border-slate-200 dark:border-slate-700/30 pb-1"><span>Dissertation</span> <span class="text-slate-700 dark:text-slate-200 font-mono">10k+ Words</span></li>
+					<li class="flex justify-between"><span>Abstract</span> <span class="text-slate-700 dark:text-slate-200 font-mono">150 - 250 Words</span></li>
+				</ul>
+			</div>
+		</section>
+
+		<!-- Product Overview Section -->
+		<section id="features" class="mt-24 py-12 border-y border-slate-200 dark:border-slate-800/50">
+			<div class="max-w-4xl mx-auto text-center px-4">
+				<h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-6">Professional Text Analysis for Everyone</h2>
+				<p class="text-slate-600 dark:text-slate-400 text-lg leading-relaxed mb-12">
+					Our Word & Character Counter is more than just a simple character counter. It's a comprehensive writing assistant designed to help you optimize your content for SEO, academic standards, and social media engagement. Whether you're a professional copywriter or a student, our tool provides the insights you need to write with confidence.
+				</p>
+				<div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-left">
+					<div class="space-y-3">
+						<div class="w-12 h-12 rounded-2xl bg-blue-500/10 dark:bg-blue-500/10 flex items-center justify-center text-blue-600 dark:text-blue-400">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+						</div>
+						<h4 class="text-slate-900 dark:text-slate-200 font-bold uppercase text-xs tracking-widest">Instant Feedback</h4>
+						<p class="text-slate-500 dark:text-slate-500 text-sm leading-relaxed">Experience zero-latency analysis. Every word, character, and keyword is tracked in real-time as you type.</p>
+					</div>
+					<div class="space-y-3">
+						<div class="w-12 h-12 rounded-2xl bg-emerald-500/10 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+						</div>
+						<h4 class="text-slate-900 dark:text-slate-200 font-bold uppercase text-xs tracking-widest">100% Private</h4>
+						<p class="text-slate-500 dark:text-slate-500 text-sm leading-relaxed">Your data is yours. All calculations are performed locally in your browser; your text is never sent to a server.</p>
+					</div>
+					<div class="space-y-3">
+						<div class="w-12 h-12 rounded-2xl bg-purple-500/10 dark:bg-purple-500/10 flex items-center justify-center text-purple-600 dark:text-purple-400">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+						</div>
+						<h4 class="text-slate-900 dark:text-slate-200 font-bold uppercase text-xs tracking-widest">Global Standards</h4>
+						<p class="text-slate-500 dark:text-slate-500 text-sm leading-relaxed">Stay compliant with platform-specific limits for SEO, social media, and international academic formats.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- FAQ Section -->
+		<section id="faq" class="mt-20 pt-12 border-t border-slate-200 dark:border-slate-800 max-w-4xl mx-auto">
+			<h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-8 text-center">Frequently Asked Questions</h2>
+			<div class="space-y-6">
+				<div class="bg-slate-50 dark:bg-slate-800/30 p-6 rounded-xl border border-slate-200 dark:border-slate-700/50 shadow-sm">
+					<h3 class="text-lg font-semibold text-blue-600 dark:text-blue-400 mb-2">Is Word & Character Counter free to use?</h3>
+					<p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+						Yes, our <strong>Word & Character Counter</strong> is 100% free to use. There are no hidden fees, subscriptions, or limits on how much text you can analyze. It's built for writers who need a reliable <strong>free word counter</strong>.
+					</p>
+				</div>
+				<div class="bg-slate-50 dark:bg-slate-800/30 p-6 rounded-xl border border-slate-200 dark:border-slate-700/50 shadow-sm">
+					<h3 class="text-lg font-semibold text-emerald-600 dark:text-emerald-400 mb-2">Is my data safe? Does the tool store my text?</h3>
+					<p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+						Your privacy is our priority. All calculations and text analysis are performed locally within your web browser. We never send your text to any server, and we do not store any of your content.
+					</p>
+				</div>
+				<div class="bg-slate-50 dark:bg-slate-800/30 p-6 rounded-xl border border-slate-200 dark:border-slate-700/50 shadow-sm">
+					<h3 class="text-lg font-semibold text-purple-600 dark:text-purple-400 mb-2">How does the Twitter (X) character counter work?</h3>
+					<p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+						Our tool functions as a real-time <strong>twitter character counter</strong>. Since X (Twitter) has a 280-character limit, you can monitor your character count as you type to ensure your post fits perfectly without being truncated.
+					</p>
+				</div>
+				<div class="bg-slate-50 dark:bg-slate-800/30 p-6 rounded-xl border border-slate-200 dark:border-slate-700/50 shadow-sm">
+					<h3 class="text-lg font-semibold text-blue-600 dark:text-blue-400 mb-2">Can I use this as an essay word counter?</h3>
+					<p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+						Absolutely. It is an ideal <strong>essay word counter</strong> for students and academics. It provides accurate word counts, character counts (with and without spaces), and sentence tracking to help you meet strict assignment requirements.
+					</p>
+				</div>
+				<div class="bg-slate-50 dark:bg-slate-800/30 p-6 rounded-xl border border-slate-200 dark:border-slate-700/50 shadow-sm">
+					<h3 class="text-lg font-semibold text-emerald-600 dark:text-emerald-400 mb-2">How is keyword density calculated?</h3>
+					<p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+						Keyword density is calculated by dividing the number of times a specific word appears by the total number of words in the text. We filter out common "stop words" to show you the most meaningful keywords for SEO.
+					</p>
+				</div>
+				<div class="bg-slate-50 dark:bg-slate-800/30 p-6 rounded-xl border border-slate-200 dark:border-slate-700/50 shadow-sm">
+					<h3 class="text-lg font-semibold text-slate-700 dark:text-slate-200 mb-2">What is the average reading speed used?</h3>
+					<p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+						The reading time is calculated using a standard average speed of 225 words per minute (WPM), which is the typical rate for an adult reading non-technical content.
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- SEO Content Section -->
+		<section class="mt-24 pb-32 border-t border-slate-200 dark:border-slate-800 pt-24 overflow-hidden">
+			<div class="max-w-6xl mx-auto px-4">
+				<div class="max-w-3xl mb-16">
+					<h2 class="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 leading-tight">
+						The Ultimate <span class="text-blue-600 dark:text-blue-400">Word Counter</span>: Why Analysis Matters
+					</h2>
+					<p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+						In today's digital age, precision in writing is more important than ever. Whether you are a student, a social media manager, or a professional blogger, having a reliable <strong>Word & Character Counter</strong> is essential.
+					</p>
+				</div>
+				
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+					<!-- Card 1 -->
+					<div class="group p-8 bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-700/50 rounded-3xl hover:border-blue-500/50 dark:hover:border-blue-400/50 transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/5">
+						<div class="text-blue-600 dark:text-blue-400 font-mono text-xs font-bold uppercase tracking-widest mb-6 flex items-center gap-2">
+							<span class="w-8 h-[1px] bg-current"></span>
+							Efficiency
+						</div>
+						<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Why Use a Word Counter Online?</h3>
+						<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4">
+							Manual counting is a thing of the past. Using a <strong>word counter online</strong> ensures that you never miss a beat. Our <strong>word counter tool</strong> provides a deep dive into your text's structure, from <strong>character counter online</strong> features to sentence tracking.
+						</p>
+					</div>
+
+					<!-- Card 2 -->
+					<div class="group p-8 bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-700/50 rounded-3xl hover:border-emerald-500/50 dark:hover:border-emerald-400/50 transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-500/5">
+						<div class="text-emerald-600 dark:text-emerald-400 font-mono text-xs font-bold uppercase tracking-widest mb-6 flex items-center gap-2">
+							<span class="w-8 h-[1px] bg-current"></span>
+							Education
+						</div>
+						<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">The Best Essay Word Counter</h3>
+						<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4">
+							Students often face strict limits. An <strong>essay word counter</strong> is a lifesaver for staying within 500 or 2,000-word limits. Our <strong>character counter free</strong> also helps with bibliography formatting and abstract constraints.
+						</p>
+					</div>
+
+					<!-- Card 3 -->
+					<div class="group p-8 bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-700/50 rounded-3xl hover:border-purple-500/50 dark:hover:border-purple-400/50 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/5">
+						<div class="text-purple-600 dark:text-purple-400 font-mono text-xs font-bold uppercase tracking-widest mb-6 flex items-center gap-2">
+							<span class="w-8 h-[1px] bg-current"></span>
+							Social
+						</div>
+						<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Master Social Media</h3>
+						<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4">
+							Whether you need an <strong>x word counter</strong> or a <strong>twitter character counter</strong>, every character counts. Our tool functions perfectly as a <strong>twitter word counter</strong>, <strong>instagram word counter</strong>, and <strong>linkedin word counter</strong>.
+						</p>
+					</div>
+
+					<!-- Card 4 -->
+					<div class="group p-8 bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-700/50 rounded-3xl hover:border-blue-500/50 dark:hover:border-blue-400/50 transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/5">
+						<div class="text-blue-600 dark:text-blue-400 font-mono text-xs font-bold uppercase tracking-widest mb-6 flex items-center gap-2">
+							<span class="w-8 h-[1px] bg-current"></span>
+							SEO
+						</div>
+						<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Professional Blog Word Counter</h3>
+						<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4">
+							A <strong>blog word counter</strong> helps you target the "sweet spot" for search engine rankings (1,500 - 2,500 words). Our <strong>character counter online</strong> also helps craft perfect meta titles and descriptions for Google.
+						</p>
+					</div>
+
+					<!-- Card 5 -->
+					<div class="group p-8 bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-700/50 rounded-3xl hover:border-emerald-500/50 dark:hover:border-emerald-400/50 transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-500/5">
+						<div class="text-emerald-600 dark:text-emerald-400 font-mono text-xs font-bold uppercase tracking-widest mb-6 flex items-center gap-2">
+							<span class="w-8 h-[1px] bg-current"></span>
+							Advanced
+						</div>
+						<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">Beyond Simple Counting</h3>
+						<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4">
+							Our real-time keyword density analysis helps identify your most used terms, preventing over-optimization. The inclusion of a <strong>character counter</strong> alongside word metrics gives you the full picture of your content.
+						</p>
+					</div>
+
+					<!-- Card 6 (Conclusion) -->
+					<div class="p-8 bg-gradient-to-br from-blue-600 to-emerald-600 dark:from-blue-500/20 dark:to-emerald-500/20 border border-blue-500/20 dark:border-emerald-500/20 rounded-3xl flex flex-col justify-center">
+						<h3 class="text-xl font-bold text-white mb-4">The Writing Science</h3>
+						<p class="text-blue-50 dark:text-slate-300 text-sm leading-relaxed mb-6">
+							Elevate your writing to professional standards.hit your goals for your blog, and ace your essays with the most versatile <strong>word counter online</strong> available today.
+						</p>
+						<a href="#text-input" class="inline-flex items-center gap-2 text-white font-bold text-sm hover:gap-3 transition-all">
+							Start Analyzing Now
+							<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+						</a>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
 </Layout>
+
+<script>
+	const textarea = document.getElementById('text-input') as HTMLTextAreaElement;
+	const wordCountEl = document.getElementById('word-count');
+	const charCountEl = document.getElementById('char-count');
+	const uniqueCharCountEl = document.getElementById('unique-char-count');
+	const charNoSpacesEl = document.getElementById('char-no-spaces');
+	const sentenceCountEl = document.getElementById('sentence-count');
+	const paragraphCountEl = document.getElementById('paragraph-count');
+	const readingTimeEl = document.getElementById('reading-time');
+	const speakingTimeEl = document.getElementById('speaking-time');
+	const keywordListEl = document.getElementById('keyword-list');
+	const charFreqListEl = document.getElementById('char-freq-list');
+	
+	const copyBtn = document.getElementById('copy-btn');
+	const clearBtn = document.getElementById('clear-btn');
+
+	const STOP_WORDS = new Set([
+		"the", "and", "a", "to", "is", "of", "in", "it", "you", "that", "he", "was", "for", "on", "are", "as", "with", "his", "they", "i", "at", "be", "this", "have", "from", "or", "one", "had", "by", "word", "but", "not", "what", "all", "were", "we", "when", "your", "can", "said", "there", "use", "an", "each", "which", "she", "do", "how", "their", "if", "will", "up", "other", "about", "out", "many", "then", "them", "these", "so", "some", "her", "would", "make", "like", "him", "into", "time", "has", "look", "two", "more", "write", "go", "see", "number", "no", "way", "could", "my", "than", "first", "been", "call", "who", "its", "now", "find"
+	]);
+
+	function formatTime(totalSeconds: number): string {
+		if (totalSeconds === 0) return '0s';
+		
+		const h = Math.floor(totalSeconds / 3600);
+		const m = Math.floor((totalSeconds % 3600) / 60);
+		const s = Math.round(totalSeconds % 60);
+
+		const parts = [];
+		if (h > 0) parts.push(`${h}h`);
+		if (m > 0) parts.push(`${m}m`);
+		if (s > 0 || (h === 0 && m === 0)) parts.push(`${s}s`);
+		
+		return parts.join(' ');
+	}
+
+	function updateMetrics() {
+		const text = textarea.value;
+		
+		// Word Count
+		const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+		const wordCount = words.length;
+		wordCountEl!.textContent = wordCount.toLocaleString();
+
+		// Character Counts
+		charCountEl!.textContent = text.length.toLocaleString();
+		charNoSpacesEl!.textContent = text.replace(/\s/g, '').length.toLocaleString();
+
+		// Unique Character Count
+		const uniqueChars = new Set(text).size;
+		uniqueCharCountEl!.textContent = uniqueChars.toLocaleString();
+
+		// Sentence Count
+		const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+		sentenceCountEl!.textContent = sentences.length.toLocaleString();
+
+		// Paragraph Count
+		const paragraphs = text.split(/\n+/).filter(p => p.trim().length > 0);
+		paragraphCountEl!.textContent = paragraphs.length.toLocaleString();
+
+		// Reading/Speaking Time
+		const readSeconds = (wordCount / 225) * 60;
+		const speakSeconds = (wordCount / 130) * 60;
+		readingTimeEl!.textContent = formatTime(readSeconds);
+		speakingTimeEl!.textContent = formatTime(speakSeconds);
+
+		// Analysis Updates
+		updateKeywords(words);
+		updateCharacterFrequency(text);
+	}
+
+	function updateKeywords(words: string[]) {
+		if (words.length === 0) {
+			keywordListEl!.innerHTML = '<p class="text-xs text-slate-500 italic">Enter text to see keyword analysis...</p>';
+			return;
+		}
+
+		const counts: Record<string, number> = {};
+		words.forEach(word => {
+			const cleanWord = word.toLowerCase().replace(/[^\w]/g, '');
+			if (cleanWord.length > 2 && !STOP_WORDS.has(cleanWord)) {
+				counts[cleanWord] = (counts[cleanWord] || 0) + 1;
+			}
+		});
+
+		const sortedKeywords = Object.entries(counts)
+			.sort((a, b) => b[1] - a[1])
+			.slice(0, 8); // Increased from 3 to 8 for better analysis
+
+		if (sortedKeywords.length === 0) {
+			keywordListEl!.innerHTML = '<p class="text-xs text-slate-500 italic">No significant keywords found.</p>';
+			return;
+		}
+
+		keywordListEl!.innerHTML = sortedKeywords.map(([word, count]) => {
+			const percentage = ((count / words.length) * 100).toFixed(1);
+			return `
+				<div class="flex justify-between items-center text-sm">
+					<span class="text-slate-700 dark:text-slate-300 font-medium truncate max-w-[100px]" title="${word}">${word}</span>
+					<div class="flex items-center gap-3 flex-1 justify-end">
+						<div class="h-1.5 w-20 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden hidden sm:block">
+							<div class="h-full bg-blue-500" style="width: ${Math.min(parseFloat(percentage) * 5, 100)}%"></div>
+						</div>
+						<div class="flex gap-2 min-w-[70px] justify-end">
+							<span class="text-blue-600 dark:text-blue-400 font-mono text-xs">${percentage}%</span>
+							<span class="text-slate-500 text-xs">(${count})</span>
+						</div>
+					</div>
+				</div>
+			`;
+		}).join('');
+	}
+
+	function updateCharacterFrequency(text: string) {
+		if (text.length === 0) {
+			charFreqListEl!.innerHTML = '<p class="text-xs text-slate-500 italic col-span-full">Enter text to see frequency...</p>';
+			return;
+		}
+
+		const counts: Record<string, number> = {};
+		for (const char of text) {
+			counts[char] = (counts[char] || 0) + 1;
+		}
+
+		const totalChars = text.length;
+		const sortedChars = Object.entries(counts)
+			.sort((a, b) => b[1] - a[1])
+			.slice(0, 24);
+
+		charFreqListEl!.innerHTML = sortedChars.map(([char, count]) => {
+			let displayChar = char;
+			if (char === ' ') displayChar = 'Space';
+			if (char === '\n') displayChar = '↵';
+			if (char === '\t') displayChar = '⇥';
+			
+			const percentage = ((count / totalChars) * 100).toFixed(1);
+
+			return `
+				<div class="flex flex-col items-center p-2 bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700/50 rounded text-[10px] shadow-sm">
+					<span class="text-slate-600 dark:text-slate-400 font-mono mb-1 truncate w-full text-center" title="${displayChar}">${displayChar}</span>
+					<span class="text-blue-600 dark:text-blue-400 font-bold">${count}</span>
+					<span class="text-slate-400 dark:text-slate-500 text-[8px] mt-0.5">${percentage}%</span>
+				</div>
+			`;
+		}).join('');
+	}
+
+	textarea.addEventListener('input', updateMetrics);
+
+	copyBtn?.addEventListener('click', () => {
+		const originalContent = copyBtn.innerHTML;
+		navigator.clipboard.writeText(textarea.value).then(() => {
+			copyBtn.innerHTML = '<span>Copied!</span>';
+			setTimeout(() => copyBtn.innerHTML = originalContent, 2000);
+		});
+	});
+
+	clearBtn?.addEventListener('click', () => {
+		textarea.value = '';
+		updateMetrics();
+	});
+
+	// Initialize
+	updateMetrics();
+</script>
+>

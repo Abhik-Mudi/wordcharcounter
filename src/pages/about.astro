@@ -1,0 +1,65 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout 
+	title="About Us | Word & Character Counter"
+	description="Learn more about Word & Character Counter, our mission to provide the best free text analysis tool for writers, and our commitment to privacy."
+>
+	<main class="max-w-4xl mx-auto px-4 py-20 w-full">
+		<header class="mb-16 text-center">
+			<h1 class="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-emerald-600 dark:from-blue-400 dark:to-emerald-400">
+				Our Mission
+			</h1>
+			<p class="text-slate-600 dark:text-slate-400 text-lg">
+				Empowering writers with precision and privacy.
+			</p>
+		</header>
+
+		<section class="prose dark:prose-invert prose-slate max-w-none space-y-8">
+			<div class="bg-slate-50 dark:bg-slate-800/30 p-8 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm">
+				<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Who We Are</h2>
+				<p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+					Word & Character Counter was born out of a simple need: a text analysis tool that is fast, professional, and respects user privacy. We believe that writers shouldn't have to trade their data for a simple word count. 
+				</p>
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+				<div class="bg-slate-50 dark:bg-slate-800/30 p-8 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm">
+					<h3 class="text-xl font-bold text-blue-600 dark:text-blue-400 mb-4">Precision First</h3>
+					<p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+						Our algorithms are meticulously crafted to handle complex formatting, punctuation, and international characters, ensuring you get the most accurate metrics possible.
+					</p>
+				</div>
+				<div class="bg-slate-50 dark:bg-slate-800/30 p-8 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm">
+					<h3 class="text-xl font-bold text-emerald-600 dark:text-emerald-400 mb-4">Privacy Always</h3>
+					<p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+						By processing all data locally in your browser, we ensure that your creative work remains your own. We never see, store, or transmit your text.
+					</p>
+				</div>
+			</div>
+
+			<div class="bg-slate-50 dark:bg-slate-800/30 p-8 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm">
+				<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">What We Offer</h2>
+				<ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-slate-600 dark:text-slate-400">
+					<li class="flex items-center gap-2">
+						<svg xmlns="http://www.w3.org/2000/svg" class="text-blue-600 dark:text-blue-400" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+						Real-time Word & Character Counting
+					</li>
+					<li class="flex items-center gap-2">
+						<svg xmlns="http://www.w3.org/2000/svg" class="text-blue-600 dark:text-blue-400" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+						SEO Keyword Density Analysis
+					</li>
+					<li class="flex items-center gap-2">
+						<svg xmlns="http://www.w3.org/2000/svg" class="text-blue-600 dark:text-blue-400" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+						Reading & Speaking Time Estimates
+					</li>
+					<li class="flex items-center gap-2">
+						<svg xmlns="http://www.w3.org/2000/svg" class="text-blue-600 dark:text-blue-400" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+						Character Frequency Breakdown
+					</li>
+				</ul>
+			</div>
+		</section>
+	</main>
+</Layout>

@@ -44,3 +44,45 @@ All commands are run from the root of the project, from a terminal:
 ## 👀 Want to learn more?
 
 Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+
+
+
+Do the On Page SEO of this Website for
+
+Main Keyword: Word Counter
+Supporting Keywords: word counter free, word counter online, word counter tool, free word counter, essay word counter, twitter character counter, twitter word counter, instagram word counter, x word counter, blog word counter, linkedin word counter, character counter, character counter online, character counter free, twitter character counter, twitter word counter 
+
+these above keywords, also use proper og meta tags for SEO
+on home page write 600 words about the tool for SEO
+
+
+
+
+add seo friendly FAQ section for these below questions:
+
+
+
+NOTE: Use JSON-LD for FAQ SEO
+example: ```
+ <script type="application/ld+json">
+ {
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [{
+ "@type": "Question",
+ "name": "How to find an apprenticeship?",
+ "acceptedAnswer": {
+ "@type": "Answer",
+ "text": "<p>We provide an official service to search through available apprenticeships. To get started, create an account here, specify the desired region, and your preferences. You will be able to search through all officially registered open apprenticeships.</p>"
+ }
+ }, {
+ "@type": "Question",
+ "name": "Whom to contact?",
+ "acceptedAnswer": {
+ "@type": "Answer",
+ "text": "You can contact the apprenticeship office through our official phone hotline above, or with the web-form below. We generally respond to written requests within 7-10 days."
+ }
+ }]
+ }
+ </script>
+```
