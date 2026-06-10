@@ -1,0 +1,58 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout 
+	title="404 - Page Not Found | Word & Character Counter"
+	description="The page you are looking for does not exist. Return to Word & Character Counter to analyze your text."
+>
+	<main class="min-h-[80vh] flex items-center justify-center px-6 py-12 w-full relative">
+        <!-- Decorative Background Elements -->
+        <div class="absolute inset-0 opacity-10 dark:opacity-20 pointer-events-none overflow-hidden">
+            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500 rounded-full blur-[120px] animate-pulse"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-emerald-500 rounded-full blur-[120px] animate-pulse delay-700"></div>
+        </div>
+
+		<div class="max-w-2xl w-full text-center relative z-10 py-12">
+			<div class="relative flex items-center justify-center mb-12">
+                <span class="text-[10rem] sm:text-[12rem] md:text-[15rem] font-black text-slate-100 dark:text-slate-800/40 leading-none select-none tracking-tighter">404</span>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <h1 class="text-3xl pb-2 sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-emerald-600 dark:from-blue-400 dark:to-emerald-400 px-4">
+                        Page Not Found
+                    </h1>
+                </div>
+            </div>
+			
+			<div class="max-w-md mx-auto">
+				<p class="text-slate-600 dark:text-slate-400 text-base sm:text-lg mb-10 leading-relaxed">
+					Oops! It looks like you've wandered into uncharted territory. The page you're looking for might have been moved or deleted.
+				</p>
+			</div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a 
+                    href="/" 
+                    class="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-2xl transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2 group"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-1 transition-transform"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+                    Back to Home
+                </a>
+                <a 
+                    href="/contact" 
+                    class="w-full sm:w-auto px-8 py-4 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold rounded-2xl border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2"
+                >
+                    Contact Support
+                </a>
+            </div>
+
+            <div class="mt-20 pt-12 border-t border-slate-200 dark:border-slate-800/50">
+                <p class="text-slate-400 dark:text-slate-500 text-sm mb-6 uppercase tracking-widest font-bold">Quick Links</p>
+                <div class="flex flex-wrap justify-center gap-8 gap-y-4 text-sm font-medium">
+                    <a href="/about" class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">About Us</a>
+                    <a href="/privacy-policy" class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Privacy Policy</a>
+                    <a href="/terms" class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Terms of Service</a>
+                </div>
+            </div>
+		</div>
+	</main>
+</Layout>
