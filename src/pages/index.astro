@@ -16,23 +16,53 @@ import Layout from '../layouts/Layout.astro';
 		<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 			<!-- Text Input Area -->
 			<section class="lg:col-span-8 space-y-4">
-				<div class="flex justify-between items-center mb-2">
-					<label for="text-input" class="text-sm font-medium text-slate-600 dark:text-slate-300">Enter your text below:</label>
-					<div class="flex gap-2">
-						<button 
-							id="copy-btn"
-							class="px-3 py-1.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition-colors flex items-center gap-1 shadow-sm"
-						>
-							<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
-							Copy Text
-						</button>
-						<button 
-							id="clear-btn"
-							class="px-3 py-1.5 text-xs font-semibold rounded bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-500/20 transition-colors flex items-center gap-1 shadow-sm"
-						>
-							<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-							Clear
-						</button>
+				<div class="space-y-4 mb-2">
+					<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+						<label for="text-input" class="text-sm font-medium text-slate-600 dark:text-slate-300">Target Platform (Optional):</label>
+						<div class="flex gap-2 overflow-x-auto pb-2 sm:pb-0 no-scrollbar">
+							<button class="platform-btn px-3 py-1.5 text-xs font-semibold rounded-full bg-blue-600 text-white shadow-sm transition-all whitespace-nowrap" data-limit="0">None</button>
+							<button class="platform-btn px-3 py-1.5 text-xs font-semibold rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all whitespace-nowrap" data-limit="280">Twitter / X</button>
+							<button class="platform-btn px-3 py-1.5 text-xs font-semibold rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all whitespace-nowrap" data-limit="3000">LinkedIn</button>
+							<button class="platform-btn px-3 py-1.5 text-xs font-semibold rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all whitespace-nowrap" data-limit="2200">Instagram</button>
+							<button class="platform-btn px-3 py-1.5 text-xs font-semibold rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all whitespace-nowrap" data-limit="60">SEO Title</button>
+							<button class="platform-btn px-3 py-1.5 text-xs font-semibold rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all whitespace-nowrap" data-limit="160">SEO Meta</button>
+						</div>
+					</div>
+
+					<!-- Progress Bar Container -->
+					<div id="progress-container" class="hidden space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
+						<div class="flex justify-between items-end">
+							<div class="flex items-center gap-2">
+								<span id="platform-name" class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Twitter</span>
+								<span id="limit-badge" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">Good</span>
+							</div>
+							<span class="text-xs font-mono text-slate-500 dark:text-slate-400">
+								<span id="current-char-count">0</span> / <span id="max-char-limit">280</span>
+							</span>
+						</div>
+						<div class="h-2 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden shadow-inner">
+							<div id="progress-bar" class="h-full bg-blue-500 transition-all duration-300 ease-out" style="width: 0%"></div>
+						</div>
+					</div>
+
+					<div class="flex justify-between items-center">
+						<span class="text-xs text-slate-400 dark:text-slate-500">Your content:</span>
+						<div class="flex gap-2">
+							<button 
+								id="copy-btn"
+								class="px-3 py-1.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition-colors flex items-center gap-1 shadow-sm"
+							>
+								<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+								Copy Text
+							</button>
+							<button 
+								id="clear-btn"
+								class="px-3 py-1.5 text-xs font-semibold rounded bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-500/20 transition-colors flex items-center gap-1 shadow-sm"
+							>
+								<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+								Clear
+							</button>
+						</div>
 					</div>
 				</div>
 				<textarea
@@ -327,6 +357,18 @@ import Layout from '../layouts/Layout.astro';
 	const copyBtn = document.getElementById('copy-btn');
 	const clearBtn = document.getElementById('clear-btn');
 
+	// Platform Validation Elements
+	const platformBtns = document.querySelectorAll('.platform-btn');
+	const progressContainer = document.getElementById('progress-container');
+	const progressBar = document.getElementById('progress-bar');
+	const platformNameEl = document.getElementById('platform-name');
+	const limitBadge = document.getElementById('limit-badge');
+	const currentCharCountEl = document.getElementById('current-char-count');
+	const maxCharLimitEl = document.getElementById('max-char-limit');
+
+	let currentLimit = 0;
+	let currentPlatform = 'None';
+
 	const STOP_WORDS = new Set([
 		"the", "and", "a", "to", "is", "of", "in", "it", "you", "that", "he", "was", "for", "on", "are", "as", "with", "his", "they", "i", "at", "be", "this", "have", "from", "or", "one", "had", "by", "word", "but", "not", "what", "all", "were", "we", "when", "your", "can", "said", "there", "use", "an", "each", "which", "she", "do", "how", "their", "if", "will", "up", "other", "about", "out", "many", "then", "them", "these", "so", "some", "her", "would", "make", "like", "him", "into", "time", "has", "look", "two", "more", "write", "go", "see", "number", "no", "way", "could", "my", "than", "first", "been", "call", "who", "its", "now", "find"
 	]);
@@ -344,6 +386,44 @@ import Layout from '../layouts/Layout.astro';
 		if (s > 0 || (h === 0 && m === 0)) parts.push(`${s}s`);
 		
 		return parts.join(' ');
+	}
+
+	function updatePlatformUI() {
+		if (currentLimit === 0) {
+			progressContainer?.classList.add('hidden');
+			textarea.classList.remove('ring-rose-500/50', 'ring-2');
+			return;
+		}
+
+		progressContainer?.classList.remove('hidden');
+		platformNameEl!.textContent = currentPlatform;
+		maxCharLimitEl!.textContent = currentLimit.toLocaleString();
+		
+		const textLength = textarea.value.length;
+		currentCharCountEl!.textContent = textLength.toLocaleString();
+		
+		const percentage = Math.min((textLength / currentLimit) * 100, 100);
+		progressBar!.style.width = `${percentage}%`;
+
+		// Update Colors and Badges
+		limitBadge!.classList.remove('bg-emerald-500/10', 'text-emerald-600', 'dark:text-emerald-400', 'border-emerald-500/20', 'bg-amber-500/10', 'text-amber-600', 'dark:text-amber-400', 'border-amber-500/20', 'bg-rose-500/10', 'text-rose-600', 'dark:text-rose-400', 'border-rose-500/20');
+		progressBar!.classList.remove('bg-blue-500', 'bg-amber-500', 'bg-rose-500');
+		textarea.classList.remove('ring-rose-500/50', 'ring-2');
+
+		if (textLength > currentLimit) {
+			limitBadge!.textContent = 'Over Limit';
+			limitBadge!.classList.add('bg-rose-500/10', 'text-rose-600', 'dark:text-rose-400', 'border-rose-500/20');
+			progressBar!.classList.add('bg-rose-500');
+			textarea.classList.add('ring-rose-500/50', 'ring-2');
+		} else if (textLength > currentLimit * 0.8) {
+			limitBadge!.textContent = 'Warning';
+			limitBadge!.classList.add('bg-amber-500/10', 'text-amber-600', 'dark:text-amber-400', 'border-amber-500/20');
+			progressBar!.classList.add('bg-amber-500');
+		} else {
+			limitBadge!.textContent = 'Good';
+			limitBadge!.classList.add('bg-emerald-500/10', 'text-emerald-600', 'dark:text-emerald-400', 'border-emerald-500/20');
+			progressBar!.classList.add('bg-blue-500');
+		}
 	}
 
 	function updateMetrics() {
@@ -379,7 +459,25 @@ import Layout from '../layouts/Layout.astro';
 		// Analysis Updates
 		updateKeywords(words);
 		updateCharacterFrequency(text);
+		updatePlatformUI();
 	}
+
+	// Platform Button Clicks
+	platformBtns.forEach(btn => {
+		btn.addEventListener('click', () => {
+			// Update active state
+			platformBtns.forEach(b => {
+				b.classList.remove('bg-blue-600', 'text-white', 'shadow-sm');
+				b.classList.add('bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-400', 'border-slate-200', 'dark:border-slate-700');
+			});
+			btn.classList.add('bg-blue-600', 'text-white', 'shadow-sm');
+			btn.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-400', 'border-slate-200', 'dark:border-slate-700');
+
+			currentLimit = parseInt(btn.getAttribute('data-limit') || '0');
+			currentPlatform = btn.textContent || 'None';
+			updatePlatformUI();
+		});
+	});
 
 	function updateKeywords(words: string[]) {
 		if (words.length === 0) {
