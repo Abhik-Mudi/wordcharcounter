@@ -7,21 +7,23 @@ interface Props {
 }
 
 const {
-  title = "Word & Character Counter - Free Online Writing Tool",
-  description = "Use our free Word & Character Counter online tool to track word count, character count, and keyword density in real-time. Perfect for essays, Twitter (X), LinkedIn, and Instagram posts.",
+  title = "Free Word & Character Counter — Dark Mode, No Ads, Real-Time",
+  description = "Free word and character counter with real-time tracking for Twitter, LinkedIn, Instagram and SEO. Dark mode, no ads, 100% private — all calculations happen in your browser.",
 } = Astro.props;
 
 const canonicalURL = new URL(
   Astro.url.pathname,
-  Astro.site || "https://wordcharactercounter.com",
+  Astro.site || "https://wordcharcounter.com",
 );
 
 const schema = {
   "@context": "https://schema.org",
   "@graph": [
+    
     {
       "@type": "SoftwareApplication",
       name: "Word & Character Counter - Free Tool",
+      url: "https://wordcharcounter.com",
       operatingSystem: "Any",
       applicationCategory: "UtilitiesApplication",
       offers: {
