@@ -1,0 +1,22 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AboutPage from '../../components/AboutPage.astro';
+import { useTranslations } from '../../i18n/utils';
+
+export async function getStaticPaths() {
+  return [
+    { params: { locale: 'de' } },
+    { params: { locale: 'fr' } },
+    { params: { locale: 'es' } },
+    { params: { locale: 'pt' } },
+    { params: { locale: 'nl' } },
+  ];
+}
+
+const { locale } = Astro.params;
+const t = useTranslations(locale);
+---
+
+<Layout title={t('about.metaTitle')} description={t('about.metaDesc')}>
+  <AboutPage lang={locale} />
+</Layout>

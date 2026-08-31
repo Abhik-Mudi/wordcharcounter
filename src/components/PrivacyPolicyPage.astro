@@ -1,0 +1,61 @@
+---
+import { useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: string;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const noteParts = t('privacy.sec1.note').split(':');
+const noteLabel = noteParts[0];
+const noteText = noteParts.slice(1).join(':');
+---
+
+<main class="max-w-4xl mx-auto px-4 py-20 w-full">
+  <header class="mb-16 text-center">
+    <h1 class="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">{t('privacy.title')}</h1>
+    <p class="text-slate-500 dark:text-slate-400 text-lg">{t('privacy.updated')}</p>
+  </header>
+
+  <div class="prose dark:prose-invert prose-slate max-w-none space-y-8 text-slate-600 dark:text-slate-400">
+    <section>
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t('privacy.sec1.title')}</h2>
+      <p>
+        {t('privacy.sec1.desc1')}
+      </p>
+      <p class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-lg text-blue-700 dark:text-blue-200">
+        <strong>{noteLabel}:</strong>{noteText}
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t('privacy.sec2.title')}</h2>
+      <p>
+        {t('privacy.sec2.desc')}
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t('privacy.sec3.title')}</h2>
+      <p>
+        {t('privacy.sec3.desc')}
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t('privacy.sec4.title')}</h2>
+      <p>
+        {t('privacy.sec4.desc')}
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t('privacy.sec5.title')}</h2>
+      <p>
+        {t('privacy.sec5.desc')}
+      </p>
+    </section>
+  </div>
+</main>

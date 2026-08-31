@@ -1,0 +1,61 @@
+---
+import { useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang: string;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<main class="max-w-4xl mx-auto px-4 py-20 w-full">
+  <header class="mb-16 text-center">
+    <h1 class="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">{t('terms.title')}</h1>
+    <p class="text-slate-500 dark:text-slate-400 text-lg">{t('terms.effective')}</p>
+  </header>
+
+  <div class="prose dark:prose-invert prose-slate max-w-none space-y-8 text-slate-600 dark:text-slate-400">
+    <section>
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t('terms.sec1.title')}</h2>
+      <p>
+        {t('terms.sec1.desc')}
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t('terms.sec2.title')}</h2>
+      <p>
+        {t('terms.sec2.desc')}
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t('terms.sec3.title')}</h2>
+      <p>
+        {t('terms.sec3.desc')}
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t('terms.sec4.title')}</h2>
+      <p>
+        {t('terms.sec4.desc')}
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t('terms.sec5.title')}</h2>
+      <p>
+        {t('terms.sec5.desc')}
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">{t('terms.sec6.title')}</h2>
+      <p>
+        {t('terms.sec6.desc')}
+      </p>
+    </section>
+  </div>
+</main>

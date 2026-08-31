@@ -9,6 +9,14 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://wordcharcounter.com',
 
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'de', 'fr', 'es', 'pt', 'nl'],
+    routing: {
+      prefixDefaultLocale: false
+    }
+  },
+
   vite: {
     plugins: [tailwindcss()]
   },

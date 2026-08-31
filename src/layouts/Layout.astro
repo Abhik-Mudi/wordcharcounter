@@ -1,14 +1,19 @@
 ---
 import "../styles/global.css";
+import { useTranslations } from '../i18n/utils';
+import { getAbsoluteLocaleUrl, getRelativeLocaleUrl } from 'astro:i18n';
 
 interface Props {
   title?: string;
   description?: string;
 }
 
+const lang = Astro.currentLocale || "en";
+const t = useTranslations(lang);
+
 const {
-  title = "Free Word & Character Counter — Dark Mode, No Ads, Real-Time",
-  description = "Free word and character counter with real-time tracking for Twitter, LinkedIn, Instagram and SEO. Dark mode, no ads, 100% private — all calculations happen in your browser.",
+  title = t('counter.metaTitle'),
+  description = t('counter.metaDesc'),
 } = Astro.props;
 
 const canonicalURL = new URL(
@@ -16,13 +21,37 @@ const canonicalURL = new URL(
   Astro.site || "https://wordcharcounter.com",
 );
 
+const locales = ['en', 'de', 'fr', 'es', 'pt', 'nl'];
+
+// Parse current relative path (without locale prefix)
+let currentPath = Astro.url.pathname;
+const pathParts = currentPath.split('/').filter(Boolean);
+if (pathParts.length > 0 && locales.includes(pathParts[0])) {
+  pathParts.shift(); // Remove the locale prefix
+}
+const relativePath = pathParts.join('/');
+
+// Keywords for SEO schema
+const keywordsMap: Record<string, string> = {
+  en: "word counter, character counter, word & character counter, word counter free, character counter online, twitter character counter",
+  de: "wortzähler, zeichenzähler, wort und zeichenzähler, wortzähler kostenlos, zeichenzähler online, twitter zeichenzähler",
+  fr: "compteur de mots, compteur de caracteres, compteur de mots gratuit, compteur de caracteres en ligne, twitter compteur de caracteres",
+  es: "contador de palabras, contador de caracteres, contador de palabras gratis, contador de caracteres online, twitter contador de caracteres",
+  pt: "contador de palavras, contador de caracteres, contador de palavras gratis, contador de caracteres online, twitter contador de caracteres",
+  nl: "woordenteller, tekenteller, woord en tekenteller, woordenteller gratis, tekenteller online, twitter tekenteller",
+};
+const currentKeywords = keywordsMap[lang] || keywordsMap.en;
+
+const getLocalizedPath = (targetLocale: string) => {
+  return getRelativeLocaleUrl(targetLocale, relativePath);
+};
+
 const schema = {
   "@context": "https://schema.org",
   "@graph": [
-    
     {
       "@type": "SoftwareApplication",
-      name: "Word & Character Counter - Free Tool",
+      name: t('counter.title'),
       url: "https://wordcharcounter.com",
       operatingSystem: "Any",
       applicationCategory: "UtilitiesApplication",
@@ -31,60 +60,58 @@ const schema = {
         price: "0",
         priceCurrency: "USD",
       },
-      description:
-        "Professional-grade Word & Character Counter free tool. Get instant metrics for word count, character counter online, and keyword density. Perfect for essays, blog posts, and social media.",
-      keywords:
-        "word counter, character counter, word & character counter, word counter free, character counter online, twitter character counter",
+      description: description,
+      keywords: currentKeywords,
     },
     {
       "@type": "FAQPage",
       mainEntity: [
         {
           "@type": "Question",
-          name: "Is Word & Character Counter free to use?",
+          name: t('faq.q1'),
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes, our Word & Character Counter is 100% free to use. There are no hidden fees, subscriptions, or limits on how much text you can analyze.",
+            text: t('faq.a1'),
           },
         },
         {
           "@type": "Question",
-          name: "Is my data safe? Does the tool store my text?",
+          name: t('faq.q2'),
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Your privacy is our priority. All calculations and text analysis are performed locally within your web browser. We never send your text to any server, and we do not store any of your content.",
+            text: t('faq.a2'),
           },
         },
         {
           "@type": "Question",
-          name: "How does the Twitter (X) character counter work?",
+          name: t('faq.q3'),
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Our tool functions as a real-time Twitter character counter. Since X (Twitter) has a 280-character limit, you can monitor your character count as you type to ensure your post fits perfectly without being truncated.",
+            text: t('faq.a3'),
           },
         },
         {
           "@type": "Question",
-          name: "Can I use this as an essay word counter?",
+          name: t('faq.q4'),
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Absolutely. It is an ideal essay word counter for students and academics. It provides accurate word counts, character counts (with and without spaces), and sentence tracking to help you meet strict assignment requirements.",
+            text: t('faq.a4'),
           },
         },
         {
           "@type": "Question",
-          name: "How is keyword density calculated?",
+          name: t('faq.q5'),
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Keyword density is calculated by dividing the number of times a specific word appears by the total number of words in the text. We filter out common 'stop words' (like 'the', 'is', 'at') to show you the most meaningful keywords.",
+            text: t('faq.a5'),
           },
         },
         {
           "@type": "Question",
-          name: "What is the average reading speed used for the time calculator?",
+          name: t('faq.q6'),
           acceptedAnswer: {
             "@type": "Answer",
-            text: "The reading time is calculated using a standard average speed of 225 words per minute, which is the typical rate for an adult reading non-technical content.",
+            text: t('faq.a6'),
           },
         },
       ],
@@ -94,7 +121,7 @@ const schema = {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
@@ -138,6 +165,12 @@ const schema = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
 
+    <!-- Hreflang markup for each language -->
+    {locales.map((locale) => (
+      <link rel="alternate" hreflang={locale} href={getAbsoluteLocaleUrl(locale, relativePath)} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={getAbsoluteLocaleUrl('en', relativePath)} />
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
@@ -157,7 +190,7 @@ const schema = {
       rel="icon"
       type="image/x-icon"
       sizes="16x16 32x32 48x48"
-      href="favicon.ico"
+      href="/favicon.ico"
     />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -171,7 +204,7 @@ const schema = {
       <div
         class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between"
       >
-        <a href="/" class="flex items-center gap-2 group">
+        <a href={getRelativeLocaleUrl(lang, "")} class="flex items-center gap-2 group">
           <img
             src="/favicon.svg"
             alt="Logo"
@@ -183,7 +216,29 @@ const schema = {
           >
         </a>
 
-				<div class="flex items-center gap-4 sm:gap-6">
+				<div class="flex items-center gap-3 sm:gap-4 md:gap-6">
+          <!-- Language Selector -->
+          <div class="relative flex items-center group">
+            <div class="absolute left-2.5 pointer-events-none text-slate-500 dark:text-slate-400">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+            <select
+              id="lang-select"
+              class="appearance-none bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-lg py-1.5 pl-8 pr-7 text-xs font-semibold focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700 transition-all shadow-sm"
+              aria-label="Change Language"
+            >
+              <option value={getLocalizedPath('en')} selected={lang === 'en'}>English</option>
+              <option value={getLocalizedPath('de')} selected={lang === 'de'}>Deutsch</option>
+              <option value={getLocalizedPath('fr')} selected={lang === 'fr'}>Français</option>
+              <option value={getLocalizedPath('es')} selected={lang === 'es'}>Español</option>
+              <option value={getLocalizedPath('pt')} selected={lang === 'pt'}>Português</option>
+              <option value={getLocalizedPath('nl')} selected={lang === 'nl'}>Nederlands</option>
+            </select>
+            <div class="absolute right-2 pointer-events-none text-slate-500 dark:text-slate-400">
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-2.5 h-2.5"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+
 					<button 
 						id="theme-toggle"
 						class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-white transition-all shadow-sm"
@@ -192,10 +247,10 @@ const schema = {
 						<svg id="sun-icon" class="hidden dark:block" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
 						<svg id="moon-icon" class="block dark:hidden" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
 					</button>
-					<a href="/#features" class="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-white transition-colors">Features</a>
-					<a href="/about" class="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-white transition-colors">About</a>
-					<a href="/#faq" class="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-white transition-colors">FAQ</a>
-					<a href="/contact" class="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-white transition-colors">Contact</a>
+					<a href={getRelativeLocaleUrl(lang, "") + "#features"} class="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-white transition-colors">{t('nav.features')}</a>
+					<a href={getRelativeLocaleUrl(lang, "about")} class="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-white transition-colors">{t('nav.about')}</a>
+					<a href={getRelativeLocaleUrl(lang, "") + "#faq"} class="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-white transition-colors">{t('nav.faq')}</a>
+					<a href={getRelativeLocaleUrl(lang, "contact")} class="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-white transition-colors">{t('nav.contact')}</a>
 				</div>
       </div>
     </nav>
@@ -207,7 +262,7 @@ const schema = {
       <div class="max-w-6xl mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div class="md:col-span-1 space-y-4">
-            <a href="/" class="flex items-center gap-2">
+            <a href={getRelativeLocaleUrl(lang, "")} class="flex items-center gap-2">
               <img
                 src="/favicon.svg"
                 alt="Logo"
@@ -218,8 +273,7 @@ const schema = {
               >
             </a>
             <p class="text-slate-600 dark:text-slate-500 text-sm leading-relaxed">
-              The most advanced word counting tool for writers, editors, and SEO
-              professionals. Real-time metrics and deep text analysis.
+              {t('footer.desc')}
             </p>
           </div>
 
@@ -227,20 +281,20 @@ const schema = {
 						<h4
 							class="text-slate-900 dark:text-white font-bold text-sm uppercase tracking-widest mb-6"
 						>
-							Product
+							{t('footer.product')}
 						</h4>
 						<ul class="space-y-4 text-sm text-slate-600 dark:text-slate-500">
 							<li>
-								<a href="/" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-									>Word Counter</a>
+								<a href={getRelativeLocaleUrl(lang, "")} class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+									>{t('footer.product.wordCounter')}</a>
 							</li>
 							<li>
-								<a href="/about" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-									>About Us</a>
+								<a href={getRelativeLocaleUrl(lang, "about")} class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+									>{t('footer.product.about')}</a>
 							</li>
 							<li>
-								<a href="/contact" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-									>Contact Us</a>
+								<a href={getRelativeLocaleUrl(lang, "contact")} class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+									>{t('footer.product.contact')}</a>
 							</li>
 						</ul>
 					</div>
@@ -249,20 +303,16 @@ const schema = {
 						<h4
 							class="text-slate-900 dark:text-white font-bold text-sm uppercase tracking-widest mb-6"
 						>
-							Resources
+							{t('footer.resources')}
 						</h4>
 						<ul class="space-y-4 text-sm text-slate-600 dark:text-slate-500">
 							<li>
-								<a href="/#features" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-									>Features</a>
+								<a href={getRelativeLocaleUrl(lang, "") + "#features"} class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+									>{t('footer.resources.tips')}</a>
 							</li>
 							<li>
-								<a href="/#guidelines" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-									>Writing Tips</a>
-							</li>
-							<li>
-								<a href="/#faq" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-									>Help Center (FAQ)</a>
+								<a href={getRelativeLocaleUrl(lang, "") + "#faq"} class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+									>{t('footer.resources.faq')}</a>
 							</li>
 						</ul>
 					</div>
@@ -271,16 +321,16 @@ const schema = {
 						<h4
 							class="text-slate-900 dark:text-white font-bold text-sm uppercase tracking-widest mb-6"
 						>
-							Legal
+							{t('footer.legal')}
 						</h4>
 						<ul class="space-y-4 text-sm text-slate-600 dark:text-slate-500">
 							<li>
-								<a href="/privacy-policy" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-									>Privacy Policy</a>
+								<a href={getRelativeLocaleUrl(lang, "privacy-policy")} class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+									>{t('footer.legal.privacy')}</a>
 							</li>
 							<li>
-								<a href="/terms" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-									>Terms of Service</a>
+								<a href={getRelativeLocaleUrl(lang, "terms")} class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+									>{t('footer.legal.terms')}</a>
 							</li>
 						</ul>
 					</div>
@@ -290,13 +340,13 @@ const schema = {
           class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-slate-200 dark:border-slate-800 gap-4"
         >
           <p class="text-slate-500 text-xs">
-            &copy; {new Date().getFullYear()} Word & Character Counter. All rights reserved.
-            Built with Astro & Tailwind.
+            &copy; {new Date().getFullYear()} {t('footer.rights')}
           </p>
           <div class="flex items-center gap-6">
             <a
               href="#"
               class="text-slate-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-white transition-colors"
+              aria-label="Twitter"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -309,6 +359,7 @@ const schema = {
             <a
               href="#"
               class="text-slate-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-white transition-colors"
+              aria-label="GitHub"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -341,4 +392,12 @@ const schema = {
 		const isDark = document.documentElement.classList.toggle('dark');
 		localStorage.setItem('theme', isDark ? 'dark' : 'light');
 	});
+
+  const langSelect = document.getElementById('lang-select') as HTMLSelectElement;
+  langSelect?.addEventListener('change', (e) => {
+    const target = e.target as HTMLSelectElement;
+    if (target.value) {
+      window.location.href = target.value;
+    }
+  });
 </script>
